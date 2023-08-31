@@ -3,13 +3,13 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "project_name"
-version = "0.1.0"
+name = "nyc_taxi"
+version = "0.1.1"
 authors = [
-    {name = "Your name", email = "you@emaildomain.uk"},
+    {name = "Ali Shaheed", email = "contact@ali-fahad-shaheed.uk"},
 ]
-description = "Project description"
-dependencies = []
+description = "NYC Taxi data project"
+dependencies = ["requests", "pandas", "python-dotenv",]
 
 [tool.setuptools.packages]
 find = {}
