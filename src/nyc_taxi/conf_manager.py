@@ -12,4 +12,4 @@ CLEAN_DATA_PATH = os.path.join(PARENT_DIR, 'clean')
 CSV_PATH = os.path.join(DOWNLOADS_PATH, 'data.csv')
 
 if __name__ == "__main__":
-    print(DATA_URL)
+    print(DATA_URL) # should print the url of where the data is being downloaded from
