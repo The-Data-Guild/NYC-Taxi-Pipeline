@@ -64,6 +64,20 @@ def create_rate_code_dim(df):
     rate_code_dim = rate_code_dim[['rate_code_id', 'RatecodeID', 'rate_code_name']]
     return rate_code_dim
 
+def create_pickup_location_dim(df):
+    """function maps data to pickup_location_dim"""
+    pickup_location_dim = df[['pickup_longitude', 'pickup_latitude']].drop_duplicates().reset_index(drop=True)
+    pickup_location_dim['pickup_location_id'] = pickup_location_dim.index
+    pickup_location_dim = pickup_location_dim[['pickup_location_id', 'pickup_longitude', 'pickup_latitude']]
+    return pickup_location_dim
+
+def create_dropoff_location_dim(df):
+    """function maps data to dropoff_location_dim"""
+    dropoff_location_dim = df[['dropoff_longitude', 'droppff_latitude']].drop_duplicates().reset_index(drop=True)
+    dropoff_location_dim['dropoff_location_id'] = dropoff_location_dim.index
+    dropoff_location_dim = dropoff_location_dim[['dropoff_location_id', 'dropoff_longitude', 'dropoff_latitude']]
+    return dropoff_location_dim
+
 def transformations(csv):
     """function to transform data"""
     df = pd.read_csv(csv)
