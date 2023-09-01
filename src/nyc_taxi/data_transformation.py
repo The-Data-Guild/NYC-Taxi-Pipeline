@@ -1,3 +1,10 @@
+"""
+filename: data_transformations.py
+Module maps data for db schema
+
+Returns *.pickle file
+by Ali Shaheed
+"""
 import os
 import pickle
 import pandas as pd
@@ -125,14 +132,14 @@ def transformations(csv):
                                    dropoff_location_dim, datetime_dim, payment_type_dim)
 
     data_dict = {
-        "datetime_dim:":datetime_dim.to_dict(orient='dict'),
-        "passenger_count_dim":passenger_count_dim.to_dict(orient='dict'),
-        "trip_distance_dim":trip_distance_dim.to_dict(orient='dict'),
-        "rate_code_dim":rate_code_dim.to_dict(orient='dict'),
-        "pickup_location_dim":pickup_location_dim.to_dict(orient='dict'),
-        "dropoff_location_dim":dropoff_location_dim.to_dict(orient='dict'),
-        "payment_type_dim":payment_type_dim.to_dict(orient='dict'),
-        "fact_table":fact_table.to_dict(orient='dict')
+        "datetime_dim:":datetime_dim,
+        "passenger_count_dim":passenger_count_dim,
+        "trip_distance_dim":trip_distance_dim,
+        "rate_code_dim":rate_code_dim,
+        "pickup_location_dim":pickup_location_dim,
+        "dropoff_location_dim":dropoff_location_dim,
+        "payment_type_dim":payment_type_dim,
+        "fact_table":fact_table
     }
 
     return data_dict
@@ -141,5 +148,3 @@ def transformations(csv):
 if __name__ == '__main__':
     with open(f"{os.path.join(CLEAN_DATA_PATH, 'data.pickle')}", 'wb') as output:
         pickle.dump(transformations(CSV_PATH), output, pickle.HIGHEST_PROTOCOL)
-
-
