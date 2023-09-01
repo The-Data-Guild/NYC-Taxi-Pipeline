@@ -65,24 +65,75 @@ def create_rate_code_dim(df):
     return rate_code_dim
 
 def create_pickup_location_dim(df):
-    """function maps data to pickup_location_dim"""
+    """function maps data to pickup_location_dim table"""
     pickup_location_dim = df[['pickup_longitude', 'pickup_latitude']].drop_duplicates().reset_index(drop=True)
     pickup_location_dim['pickup_location_id'] = pickup_location_dim.index
     pickup_location_dim = pickup_location_dim[['pickup_location_id', 'pickup_longitude', 'pickup_latitude']]
     return pickup_location_dim
 
 def create_dropoff_location_dim(df):
-    """function maps data to dropoff_location_dim"""
-    dropoff_location_dim = df[['dropoff_longitude', 'droppff_latitude']].drop_duplicates().reset_index(drop=True)
+    """function maps data to dropoff_location_dim table"""
+    dropoff_location_dim = df[['dropoff_longitude', 'dropoff_latitude']].drop_duplicates().reset_index(drop=True)
     dropoff_location_dim['dropoff_location_id'] = dropoff_location_dim.index
     dropoff_location_dim = dropoff_location_dim[['dropoff_location_id', 'dropoff_longitude', 'dropoff_latitude']]
     return dropoff_location_dim
 
-def transformations(csv):
-    """function to transform data"""
-    df = pd.read_csv(csv)
+def create_payment_type_dim(df):
+    """function maps data to payment_type_dim table"""
+    payment_type_name = {
+        1:"Credit card",
+        2:"Cash",
+        3:"No charge",
+        4:"Dispute",
+        5:"Unknown",
+        6:"Voided trip"
+    }
 
-    data_dict = create_datetime_dim(df)
+    payment_type_dim = df[['payment_type']].drop_duplicates().reset_index(drop=True)
+    payment_type_dim['payment_type_id'] = payment_type_dim.index
+    payment_type_dim['payment_type_name'] = payment_type_dim['payment_type'].map(payment_type_name)
+    payment_type_dim = payment_type_dim[['payment_type_id', 'payment_type', 'payment_type_name']]
+    return payment_type_dim
+
+def create_fact_table(df, passenger_count, trip_distance, rate_code, pickup_location,
+                      dropoff_location, date_time, payment_type):
+    """function maps data to fact_table"""
+    face_table = df.merge(passenger_count, on='passenger_count') \
+            .merge(trip_distance, on='trip_distance') \
+            .merge(rate_code, on='RatecodeID') \
+            .merge(pickup_location, on=['pickup_longitude', 'pickup_latitude']) \
+            .merge(dropoff_location, on=['dropoff_longitude', 'dropoff_latitude']) \
+            .merge(date_time, on=['tpep_pickup_datetime', 'tpep_dropoff_datetime']) \
+            .merge(payment_type, on='payment_type') \
+            [['VendorID', 'datetime_id', 'passenger_count_id', 'trip_distance_id',
+              'rate_code_id', 'store_and_fwd_flag', 'pickup_location_id', 'dropoff_location_id',
+              'payment_type_id', 'fare_amount', 'extra', 'mta_tax', 'tip_amount', 'tolls_amount',
+              'improvement_surcharge', 'total_amount']]
+    return face_table
+
+def transformations(csv):
+    """function to transform data mapping it to db schema"""
+    df = pd.read_csv(csv)
+    datetime_dim = create_datetime_dim(df)
+    passenger_count_dim = create_passenger_count_dim(df)
+    trip_distance_dim = create_trip_distance_dim(df)
+    rate_code_dim = create_rate_code_dim(df)
+    pickup_location_dim = create_pickup_location_dim(df)
+    dropoff_location_dim = create_dropoff_location_dim(df)
+    payment_type_dim = create_payment_type_dim(df)
+    fact_table = create_fact_table(df, passenger_count_dim, trip_distance_dim, rate_code_dim, pickup_location_dim,
+                                   dropoff_location_dim, datetime_dim, payment_type_dim)
+
+    data_dict = {
+        "datetime_dim:":datetime_dim.to_dict(orient='dict'),
+        "passenger_count_dim":passenger_count_dim.to_dict(orient='dict'),
+        "trip_distance_dim":trip_distance_dim.to_dict(orient='dict'),
+        "rate_code_dim":rate_code_dim.to_dict(orient='dict'),
+        "pickup_location_dim":pickup_location_dim.to_dict(orient='dict'),
+        "dropoff_location_dim":dropoff_location_dim.to_dict(orient='dict'),
+        "payment_type_dim":payment_type_dim.to_dict(orient='dict'),
+        "fact_table":fact_table.to_dict(orient='dict')
+    }
 
     return data_dict
 
