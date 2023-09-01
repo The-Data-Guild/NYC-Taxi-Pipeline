@@ -29,7 +29,40 @@ def create_datetime_dim(df):
                                  'tpep_dropoff_datetime', 'drop_hour', 'drop_day', 'drop_month',
                                  'drop_year', 'drop_weekday']]
 
-    return {"datetime_dim":datetime_dim.to_dict(orient="dict")}
+    return datetime_dim
+
+def create_passenger_count_dim(df):
+    """function maps data to passenger_count_dim table"""
+    passenger_count_dim = df[['passenger_count']].drop_duplicates().reset_index(drop=True)
+    passenger_count_dim['passenger_count_id'] = passenger_count_dim.index
+    passenger_count_dim = passenger_count_dim[['passenger_count_id', 'passenger_count']]
+
+    return  passenger_count_dim
+
+def create_trip_distance_dim(df):
+    """function maps data to trip_distance_dim table"""
+
+    trip_distance_dim = df[['trip_distance']].drop_duplicates().reset_index(drop=True)
+    trip_distance_dim['trip_distance_id'] = trip_distance_dim.index
+    trip_distance_dim = trip_distance_dim[['trip_distance_id', 'trip_distance']]
+    return trip_distance_dim
+
+def create_rate_code_dim(df):
+    """maps data to rate_code_dim table"""
+    rate_code_type = {
+        1:"Standard rate",
+        2:"JFK",
+        3:"Newark",
+        4:"Nassau or Westchester",
+        5:"Negotiated fare",
+        6:"Group ride"
+    }
+
+    rate_code_dim = df[['RatecodeID']].drop_duplicates().reset_index(drop=True)
+    rate_code_dim['rate_code_id'] = rate_code_dim.index
+    rate_code_dim['rate_code_name'] = rate_code_dim['RatecodeID'].map(rate_code_type)
+    rate_code_dim = rate_code_dim[['rate_code_id', 'RatecodeID', 'rate_code_name']]
+    return rate_code_dim
 
 def transformations(csv):
     """function to transform data"""
