@@ -9,7 +9,7 @@ authors = [
     {name = "Ali Shaheed", email = "contact@ali-fahad-shaheed.uk"},
 ]
 description = "NYC Taxi data project"
-dependencies = ["requests", "pandas", "python-dotenv",]
+dependencies = ["requests", "pandas", "python-dotenv", "psycopg2"]
 
 [tool.setuptools.packages]
 find = {}

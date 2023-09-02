@@ -11,12 +11,14 @@ DOWNLOADS_PATH = os.path.join(PARENT_DIR, 'raw')
 CLEAN_DATA_PATH = os.path.join(PARENT_DIR, 'clean')
 CSV_PATH = os.path.join(DOWNLOADS_PATH, 'data.csv')
 
+# Database configuration settings
 DB_PATH = os.path.join(PARENT_DIR, 'data')
 DATABASE = conf("DATABASE")
+TABLESPACE = f"{DATABASE}_space"
 DB_USER = conf("DB_USER")
 DB_PASSWORD = conf("DB_PASSWORD")
 HOST = conf("HOST")
 PORT = conf("PORT")
 
 if __name__ == "__main__":
-    print(DATA_URL) # should print the url of where the data is being downloaded from
+    print(type(DATABASE)) # should print the url of where the data is being downloaded from
