@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-PARENT_DIR = Path().absolute().parent
+PARENT_DIR = os.path.join(Path().absolute(),'src')
+
 
 load_dotenv()
 conf = os.getenv
@@ -13,6 +14,7 @@ CSV_PATH = os.path.join(DOWNLOADS_PATH, 'data.csv')
 
 # Database configuration settings
 DB_PATH = os.path.join(PARENT_DIR, 'data')
+MAIN_DB = conf("MAIN_DB")
 DATABASE = conf("DATABASE")
 TABLESPACE = f"{DATABASE}_space"
 DB_USER = conf("DB_USER")
@@ -21,4 +23,5 @@ HOST = conf("HOST")
 PORT = conf("PORT")
 
 if __name__ == "__main__":
-    print(type(DATABASE)) # should print the url of where the data is being downloaded from
+    print(PARENT_DIR)
+    print(DB_PATH) # should print the url of where the data is being downloaded from
