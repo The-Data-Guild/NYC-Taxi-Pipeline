@@ -161,5 +161,4 @@ cython_debug/
 src/raw/data.csv
 src/.env
 *.pickle
-*.pickle
-*.pickle
+.vscode
